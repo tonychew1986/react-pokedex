@@ -4,27 +4,45 @@
  *
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 
+import { useParams } from 'react-router-dom';
+
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
-import makeSelectDetailPage from './selectors';
+import { makeSelectDetailPage } from './selectors';
 import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
-export function DetailPage() {
+import {
+  retrievePokemon
+} from './actions';
+
+export function DetailPage({
+  detailPage,
+  onRetrievePokemon
+}) {
   useInjectReducer({ key: 'detailPage', reducer });
   useInjectSaga({ key: 'detailPage', saga });
 
+  // let params = useParams();
+  // console.log('params', params)
+
+  // const dispatch = useDispatch();
+  useEffect(() => {
+    // dispatch(retrievePokemon());
+    onRetrievePokemon(1)
+  },[])
+
   return (
     <div>
-      <FormattedMessage {...messages.header} />
+      test
     </div>
   );
 }
@@ -39,7 +57,10 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    onRetrievePokemon: evt => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(retrievePokemon(evt));
+    },
   };
 }
 

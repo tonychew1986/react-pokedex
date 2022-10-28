@@ -3,41 +3,41 @@ import { take, delay, call, put, select, takeLatest, takeEvery } from 'redux-sag
 
 import {
   RETRIEVE_POKEMON
-} from 'containers/DetailPage/constants';
+} from 'containers/ListPage/constants';
 
 import {
   retrievePokemonSuccess
-} from 'containers/DetailPage/actions';
+} from 'containers/ListPage/actions';
 
 import {
   makeSelectListPage
-} from 'containers/DetailPage/selectors';
+} from 'containers/ListPage/selectors';
 
 import axios, * as others from 'axios';
 
 // Individual exports for testing
-export default function* detailPageSaga() {
+export default function* listPageSaga() {
   yield takeLatest(RETRIEVE_POKEMON, _retrievePokemon);
 }
 
 export function* _retrievePokemon(data) {
-  console.log("_retrievePokemon", data['num']);
+  console.log("_retrievePokemon", data['page']);
 
-  let num = data['num'];
+  let page = data['page'];
 
   // let farmInfo = yield select(makeSelectListPage());
 
-  let pokemonData = yield call(pokemonApi, num);
+  let pokemonData = yield call(pokemonApi, page);
   console.log('pokemonData', pokemonData)
 
   // yield delay(100000);
   // yield put(depositSuccess(assetNum, depositAmount, txHash, selectedTrancheValue));
   // yield put(updateLoadingScreen(["", ""]));
-  yield put(retrievePokemonSuccess(pokemonData));
+  yield put(retrievePokemonSuccess(page, pokemonData));
 }
 
-async function pokemonApi(num) {
-  let url = "https://pokeapi.co/api/v2/pokemon/" + num
+async function pokemonApi(page) {
+  let url = "https://pokeapi.co/api/v2/pokemon?offset=" + ((page - 1) * 20)
   let pokemonData = await axios.get(url)
   return pokemonData.data
 }

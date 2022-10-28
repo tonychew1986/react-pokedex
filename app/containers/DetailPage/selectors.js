@@ -21,5 +21,8 @@ const makeSelectDetailPage = () =>
     substate => substate,
   );
 
-export default makeSelectDetailPage;
-export { selectDetailPageDomain };
+// export default makeSelectDetailPage;
+export {
+  selectDetailPageDomain,
+  makeSelectDetailPage
+};

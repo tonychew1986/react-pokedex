@@ -4,15 +4,31 @@
  *
  */
 import produce from 'immer';
-import { DEFAULT_ACTION } from './constants';
+import {
+  RETRIEVE_POKEMON,
+  RETRIEVE_POKEMON_SUCCESS
+} from './constants';
 
-export const initialState = {};
+export const initialState = {
+  loading: false,
+  pokemonEntryNum: 0,
+  pokemonAttributes: []
+};
 
 /* eslint-disable default-case, no-param-reassign */
 const detailPageReducer = (state = initialState, action) =>
-  produce(state, (/* draft */) => {
+  produce(state, draft => {
     switch (action.type) {
-      case DEFAULT_ACTION:
+      case RETRIEVE_POKEMON:
+        draft.loading = true;
+        draft.pokemonEntryNum = action.num
+
+        break;
+
+      case RETRIEVE_POKEMON_SUCCESS:
+        draft.loading = false;
+        draft.pokemonAttributes = action.entry;
+
         break;
     }
   });

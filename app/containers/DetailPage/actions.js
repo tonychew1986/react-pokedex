@@ -4,10 +4,22 @@
  *
  */
 
-import { DEFAULT_ACTION } from './constants';
+ import {
+  RETRIEVE_POKEMON,
+  RETRIEVE_POKEMON_SUCCESS
+ } from './constants';
 
-export function defaultAction() {
+ export function retrievePokemon(num) {
+  console.log('retrievePokemon page', num)
   return {
-    type: DEFAULT_ACTION,
+    type: RETRIEVE_POKEMON,
+    num
   };
-}
+ }
+
+ export function retrievePokemonSuccess(entry) {
+  return {
+    type: RETRIEVE_POKEMON_SUCCESS,
+    entry
+  };
+ }
