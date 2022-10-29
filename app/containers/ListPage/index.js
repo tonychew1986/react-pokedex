@@ -19,6 +19,9 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
+import Modal from 'react-modal';
+import Form from '../../components/Form';
+
 import {
   Link,
 } from 'react-router-dom';
@@ -62,20 +65,53 @@ const Styles = styled.div`
 import { useTable, usePagination } from 'react-table'
 
 import {
-  retrievePokemon
+  retrievePokemon,
+  addPokemon,
+  setPage
 } from './actions';
 
 export function ListPage({
   listPage,
-  onRetrievePokemon
+  onRetrievePokemon,
+  onAddPokemon,
+  onSetPage
 }) {
   useInjectReducer({ key: 'listPage', reducer });
   useInjectSaga({ key: 'listPage', saga });
 
+  const [initated, setInitState] = useState(0);
+  const [modalIsOpen, setIsOpen] = useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
   // const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(retrievePokemon());
+    // if (initated == 0) {
     onRetrievePokemon(1)
+    //   setInitState(1)
+    // }
   },[])
 
   const columns = React.useMemo(
@@ -88,7 +124,7 @@ export function ListPage({
             accessor: "",
             Cell: (row) => {
               return (
-                <div>{(row.state.pageIndex * 20) + (parseInt(row.row.id) + 1)}</div>
+                <div>{((listPage.currentListPage) * 20) + (parseInt(row.row.id) + 1)}</div>
               )
             },
           },
@@ -106,168 +142,122 @@ export function ListPage({
     []
   )
 
-  function Table({
-    columns,
-    data,
-    fetchData,
-    pageCount: controlledPageCount
-  }) {
+  function Table({ columns, data }) {
     // Use the state and functions returned from useTable to build your UI
     const {
       getTableProps,
       getTableBodyProps,
       headerGroups,
+      rows,
       prepareRow,
-      page, // Instead of using 'rows', we'll use page,
-      // which has only the rows for the active page
-
-      // The rest of these things are super handy, too ;)
-      canPreviousPage,
-      canNextPage,
-      pageOptions,
-      pageCount,
-      gotoPage,
-      nextPage,
-      previousPage,
-      setPageSize,
-      state: { pageIndex, pageSize },
-    } = useTable(
-      {
-        columns,
-        data,
-        initialState: {
-          pageIndex: 0,
-          pageSize: 20
-        },
-        manualPagination: true,
-        pageCount: Math.ceil(controlledPageCount / 20),
-      },
-      usePagination
-    )
-
-    React.useEffect(() => {
-      fetchData({ pageIndex })
-    }, [fetchData, pageIndex])
+    } = useTable({
+      columns,
+      data,
+    })
 
     // Render the UI for your table
     return (
-      <>
-        <table {...getTableProps()}>
-          <thead>
-            {headerGroups.map(headerGroup => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
-                  <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                ))}
+      <table {...getTableProps()}>
+        <thead>
+          {headerGroups.map(headerGroup => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map(column => (
+                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row, i) => {
+            prepareRow(row)
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map(cell => {
+                  return (
+                    <td {...cell.getCellProps()}>
+                      <Link to={`/detail/${((1 * 20) + (i+1))}`}>
+                        {cell.render('Cell')}
+                      </Link>
+                    </td>
+                  )
+                })}
               </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, i) => {
-              prepareRow(row)
-              return (
-                <tr {...row.getRowProps()}>
-                    {row.cells.map(cell => {
-                      return (
-                        <td {...cell.getCellProps()}>
-                          <Link to={`/detail/${((pageIndex * 20) + (i+1))}`}>
-                            {cell.render('Cell')}
-                          </Link>
-                        </td>
-                      )
-                    })}
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-        {/*
-          Pagination can be built however you'd like.
-          This is just a very basic UI implementation:
-        */}
-        <div className="pagination">
-          <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </button>{' '}
-          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          <button onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            {'>>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1} of {pageOptions.length}
-            </strong>{' '}
-          </span>
-          <span>
-            | Go to page:{' '}
-            <input
-              type="number"
-              defaultValue={pageIndex + 1}
-              onChange={e => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                gotoPage(page)
-              }}
-              style={{ width: '100px' }}
-            />
-          </span>{' '}
-          <select
-            value={pageSize}
-            onChange={e => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
-      </>
+            )
+          })}
+        </tbody>
+      </table>
     )
   }
 
-  const fetchIdRef = React.useRef(0)
 
-  const fetchData = React.useCallback(({ pageIndex }) => {
-    console.log('xxx', pageIndex)
+  let totalPokemonCount = listPage.pokemonCount + listPage.newPokemons.length
 
-    // const fetchId = ++fetchIdRef.current
-    //
-    // setTimeout(() => {
-    //   // Only update the data if this is the latest fetch
-    //   if (fetchId === fetchIdRef.current) {
-    //     onRetrievePokemon(pageIndex)
-    //   }
-    // }, 1000)
-  }, [])
+  let maxPage = Math.ceil((listPage.pokemonCount + listPage.newPokemons.length)/20)
 
   return (
+
     <div>
       <FormattedMessage {...messages.header} />
-      {listPage.pokemonCount}
+      {totalPokemonCount} :: {listPage.pokemonCount} + {listPage.newPokemons.length}
+
+      <div>
+        <button onClick={() => openModal()}>
+          Add pokemon
+        </button>
+      </div>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onAfterOpen={afterOpenModal}
+        onRequestClose={closeModal}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <Form listPage={listPage} onAddPokemon={onAddPokemon} closeModal={closeModal} />
+      </Modal>
+
+      <Link to="/detail/1154">
+        link to existing pokemon
+      </Link>
+      <Link to="/detail/1155">
+        link to new pokemon
+      </Link>
+      <Link to="/detail/1156">
+        no such pokemon
+      </Link>
+
       <Styles>
         <Table
           columns={columns}
           data={listPage.pokemonList}
-          fetchData={fetchData}
-          pageCount={listPage.pokemonCount}
         />
+
+        {listPage.currentListPage > 1 && (
+          <>
+            <button onClick={() => onRetrievePokemon(1)}>
+              first
+            </button>
+            <button onClick={() => onRetrievePokemon(listPage.currentListPage - 1)}>
+              prev
+            </button>
+          </>
+        )}
+        {listPage.currentListPage < maxPage && (
+          <>
+            <button onClick={() => onRetrievePokemon(listPage.currentListPage + 1)}>
+              next
+            </button>
+            <button onClick={() => onRetrievePokemon(maxPage)}>
+              last
+            </button>
+          </>
+        )}
+
+        <div>
+          Page {listPage.currentListPage} of {maxPage}
+        </div>
       </Styles>
 
-      <div>
-        <Link to="/form">
-          <button>
-            Add pokemon
-          </button>
-        </Link>
-      </div>
     </div>
   );
 }
@@ -287,6 +277,14 @@ function mapDispatchToProps(dispatch) {
     onRetrievePokemon: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(retrievePokemon(evt));
+    },
+    onAddPokemon: evt => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(addPokemon(evt));
+    },
+    onSetPage: evt => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(setPage(evt));
     },
   };
 }

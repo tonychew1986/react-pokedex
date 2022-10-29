@@ -13,25 +13,26 @@ import { Switch, Route } from 'react-router-dom';
 import HomePage from 'containers/HomePage/Loadable';
 import ListPage from 'containers/ListPage/Loadable';
 import DetailPage from 'containers/DetailPage/Loadable';
-import FormPage from 'containers/FormPage/Loadable';
 import NotFoundPage from 'containers/NotFoundPage/Loadable';
 
-// import Navigation from '../../components/Navigation';
+import Navigation from '../../components/Navigation';
 // import LoadingScreen from '../../components/LoadingScreen';
 
 import GlobalStyle from '../../global-styles';
-// <LoadingScreen />
-// <Navigation />
+
+import Style from './Style';
 
 export default function App() {
   return (
     <div>
-      <Switch>
-        <Route exact path="/" component={ListPage} />
-        <Route exact path="/detail/:id" component={DetailPage} />
-        <Route exact path="/form" component={FormPage} />
-        <Route component={NotFoundPage} />
-      </Switch>
+      <Navigation />
+      <Style>
+        <Switch>
+          <Route exact path="/" component={ListPage} />
+          <Route path="/detail/:id" component={DetailPage} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </Style>
       <GlobalStyle />
     </div>
   );
