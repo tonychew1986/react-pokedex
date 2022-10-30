@@ -43,14 +43,16 @@ export function DetailPage({
 
   // let params = useParams();
   let pokemonPath = window.location.pathname.split('/')
-  let pokemonId = pokemonPath[pokemonPath.length - 1]
+  let pokemonIdWithPrefix = pokemonPath[pokemonPath.length - 1]
+  let pokemonId = pokemonIdWithPrefix.substring(2);
+
   console.log('pokemonId', pokemonId)
 
   // const dispatch = useDispatch();
   useEffect(() => {
     // dispatch(retrievePokemon());
     onRetrievePokemon(1)
-    onRetrieveSinglePokemon(pokemonId)
+    onRetrieveSinglePokemon(pokemonIdWithPrefix)
   },[])
 
   let skills
@@ -90,15 +92,110 @@ export function DetailPage({
   return (
     <Style>
       {detailPage.pokemonFound ? (
-        <div>
-          This is an existing pokemon
-        </div>
+        <>
+          <div>
+            This is an existing pokemon
+          </div>
+
+          {!detailPage.loading && (
+            <div>
+              {detailPage.pokemonFound && (
+                <div>
+                  {detailPage.pokemonAttributes.sprites ? (
+                    <div>
+                      <div>
+                        <img src={detailPage.pokemonAttributes.sprites.front_default} />
+                      </div>
+                      <div>
+                        <img src={detailPage.pokemonAttributes.sprites.back_default} />
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      ...
+                    </div>
+                  )}
+                  <div className="attribute">
+                    <div className="subtitle">
+                      Name:
+                    </div>
+                    <div>
+                      {detailPage.pokemonAttributes.name}
+                    </div>
+                  </div>
+                  <div className="attribute">
+                    <div className="subtitle">
+                      Height:
+                    </div>
+                    <div>
+                      {detailPage.pokemonAttributes.height}
+                    </div>
+                  </div>
+                  <div className="attribute">
+                    <div className="subtitle">
+                      Weight:
+                    </div>
+                    <div>
+                      {detailPage.pokemonAttributes.weight}
+                    </div>
+                  </div>
+                  <div className="attribute">
+                    <div className="subtitle">
+                      Skills:
+                    </div>
+                    {skills}
+                  </div>
+                  <div className="attribute">
+                    <div className="subtitle">
+                      Types:
+                    </div>
+                    {types}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </>
       ) : (
         <>
-          {pokemonId.substring(0, 1) == "n" ? (
-            <div>
-              This is a new pokemon
-            </div>
+          {pokemonIdWithPrefix.substring(0, 1) == "n" ? (
+            <>
+              <div>
+                This is a new pokemon
+              </div>
+              <div>
+                {!detailPage.loading && (
+                  <div>
+                      <div>
+                        <div className="attribute">
+                          <div className="subtitle">
+                            Name:
+                          </div>
+                          <div>
+                            {listPage.newPokemons[pokemonId].name}
+                          </div>
+                        </div>
+                        <div className="attribute">
+                          <div className="subtitle">
+                            Height:
+                          </div>
+                          <div>
+                            {listPage.newPokemons[pokemonId].height}
+                          </div>
+                        </div>
+                        <div className="attribute">
+                          <div className="subtitle">
+                            Weight:
+                          </div>
+                          <div>
+                            {listPage.newPokemons[pokemonId].weight}
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                )}
+              </div>
+            </>
           ) : (
             <>
               There is no pokemon with this id
@@ -109,101 +206,6 @@ export function DetailPage({
 
 
 
-      {!detailPage.loading && (
-        <div>
-          {detailPage.pokemonFound && (
-            <div>
-              {detailPage.pokemonAttributes.sprites ? (
-                <div>
-                  <div>
-                    <img src={detailPage.pokemonAttributes.sprites.front_default} />
-                  </div>
-                  <div>
-                    <img src={detailPage.pokemonAttributes.sprites.back_default} />
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  ...
-                </div>
-              )}
-              <div className="attribute">
-                <div className="subtitle">
-                  Name:
-                </div>
-                <div>
-                  {detailPage.pokemonAttributes.name}
-                </div>
-              </div>
-              <div className="attribute">
-                <div className="subtitle">
-                  Height:
-                </div>
-                <div>
-                  {detailPage.pokemonAttributes.height}
-                </div>
-              </div>
-              <div className="attribute">
-                <div className="subtitle">
-                  Weight:
-                </div>
-                <div>
-                  {detailPage.pokemonAttributes.weight}
-                </div>
-              </div>
-              <div className="attribute">
-                <div className="subtitle">
-                  Skills:
-                </div>
-                {skills}
-              </div>
-              <div className="attribute">
-                <div className="subtitle">
-                  Types:
-                </div>
-                {types}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {(pokemonId > listPage.pokemonCount && pokemonId <= totalPokemonCount) && (
-        <div>
-
-
-          {!detailPage.loading && (
-            <div>
-                <div>
-                  <div className="attribute">
-                    <div className="subtitle">
-                      Name:
-                    </div>
-                    <div>
-                      {listPage.newPokemons[0].name}
-                    </div>
-                  </div>
-                  <div className="attribute">
-                    <div className="subtitle">
-                      Height:
-                    </div>
-                    <div>
-                      {listPage.newPokemons[0].height}
-                    </div>
-                  </div>
-                  <div className="attribute">
-                    <div className="subtitle">
-                      Weight:
-                    </div>
-                    <div>
-                      {listPage.newPokemons[0].weight}
-                    </div>
-                  </div>
-                </div>
-            </div>
-          )}
-        </div>
-      )}
 
     </Style>
   );

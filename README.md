@@ -11,6 +11,16 @@ Pages
 Pokedex flow
 ----------------
 
+### Usage flow
+1. User enters page with paginated list of 1st 20 pokemons
+2. They are able to navigate through all pokemons through the navigation
+3. Pokemon id are not sequential
+4. Upon clicking, they should be able to view pokemon details in a separate page
+5. They can also choose to add a new pokemon (external of PokeApi)
+6. They can fill in a form to add the pokemon
+7. The newly added pokemon should be reflected in the paginated list with the pre-existing pokemons
+8. Details of the newly added pokemon can also be viewed upon clicking
+
 ### Existing pokemons
 - Call PokeApi & insert into Redux store
 - Retrieve pokemon count to determine pagination
