@@ -11,11 +11,11 @@ Pages
 Pokedex flow
 ----------------
 
-### Demo
+## Demo
 https://user-images.githubusercontent.com/6251226/198874428-5843a520-fd1f-490a-bf5b-fa78ccf9c0b3.mp4
 
 
-### Usage flow
+## Usage flow
 1. User enters page with paginated list of 1st 20 pokemons
 2. They are able to navigate through all pokemons through the navigation
 3. Pokemon id are not sequential
