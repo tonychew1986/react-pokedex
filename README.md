@@ -12,7 +12,8 @@ Pokedex flow
 ----------------
 
 ### Demo
-![Alt Text](https://github.com/tonychew1986/react-pokedex/blob/master/demo.mp4)
+https://user-images.githubusercontent.com/6251226/198874428-5843a520-fd1f-490a-bf5b-fa78ccf9c0b3.mp4
+
 
 ### Usage flow
 1. User enters page with paginated list of 1st 20 pokemons
