@@ -33,6 +33,8 @@ export function* _retrievePokemon(data) {
   console.log('apiPokemonLastPageCount', apiPokemonLastPageCount)
   console.log('apiPokemonLastPageRemainder', apiPokemonLastPageRemainder)
 
+  let totalNewPokemonPage = page - apiPokemonLastPageCount
+
   let pokemonData = [];
   let pokemonDataCount = 0;
   let remainderOffsetOnNewPokemon = 20 - apiPokemonLastPageRemainder
@@ -68,15 +70,20 @@ export function* _retrievePokemon(data) {
     let entriesToAdd = Math.min(newPokemons.length - remainderOffsetOnNewPokemon, 20)
     console.log('entriesToAdd', entriesToAdd)
     pokemonDataCount = 0;
+    // totalNewPokemonPage
+    let currentNewPokemonPageCount = page - apiPokemonLastPageCount - 1
+    console.log('currentNewPokemonPageCount', currentNewPokemonPageCount)
 
     for(var i=0; i<entriesToAdd; i++){
-      let startingIndex = remainderOffsetOnNewPokemon + i
+      let startingIndex = (currentNewPokemonPageCount*20) + remainderOffsetOnNewPokemon + i
       console.log('startingIndex', startingIndex)
       console.log('newPokemons[startingIndex]', newPokemons[startingIndex])
-      pokemonData.push({
-        "name": newPokemons[startingIndex]['name'],
-        "url": "https://customurl.com/" + newPokemons[startingIndex]['id'] + '/'
-      })
+      if(newPokemons[startingIndex]){
+        pokemonData.push({
+          "name": newPokemons[startingIndex]['name'],
+          "url": "https://customurl.com/" + newPokemons[startingIndex]['id'] + '/'
+        })
+      }
     }
   }
 

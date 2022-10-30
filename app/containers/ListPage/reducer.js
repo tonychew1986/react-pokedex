@@ -58,6 +58,8 @@ const listPageReducer = (state = initialState, action) =>
 
       case POPULATE_POKEMON:
         let count = draft.newPokemons.length;
+        console.log('draft.newPokemons', draft.newPokemons)
+        
         let obj = {
             "id": "n-"+count,
             "name": "pokemon" + count,

@@ -48,7 +48,7 @@ function Form({
     formState: { errors },
   } = useForm();
 
-  let newPokemonId = "n-" + parseInt(listPage.newPokemons.length + 1)
+  let newPokemonId = "n-" + parseInt(listPage.newPokemons.length)
 
   return (
     <div>
