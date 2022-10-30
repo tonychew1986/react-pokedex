@@ -11,6 +11,9 @@ Pages
 Pokedex flow
 ----------------
 
+### Demo
+![Alt Text](https://github.com/tonychew1986/react-pokedex/demo.gif)
+
 ### Usage flow
 1. User enters page with paginated list of 1st 20 pokemons
 2. They are able to navigate through all pokemons through the navigation
