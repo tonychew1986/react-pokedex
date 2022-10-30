@@ -26,6 +26,12 @@ Pokedex flow
 - new pokemon needs to be stored in redux store
 - will require a local 'new pokemon addition' array
 
+## Issues faced
+- pokemon id is not in sequential order
+- newly added pokemon cannot follow id in terms of sequential order
+- give it a unique identifier before the id
+- cannot use id to determine if a detail page is empty or does not contain pokemon
+
 
 ## Instructions
 

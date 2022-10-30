@@ -8,7 +8,8 @@ import {
   ADD_POKEMON,
   RETRIEVE_POKEMON,
   RETRIEVE_POKEMON_SUCCESS,
-  SET_PAGE
+  SET_PAGE,
+  POPULATE_POKEMON
 } from './constants';
 
 export const initialState = {
@@ -20,22 +21,9 @@ export const initialState = {
   pokemonCountTotal: 0, //api + new
   currentListPage: 0,
   newPokemons: [],
-  newPokemonsCount: 0,
-  fullPokemonListObj: {}
+  apiPokemonLastPageCount: 999999,
+  apiPokemonLastPageRemainder: 0
 };
-
-// {
-//   "1": {
-//     "1": {},
-//     "2": {},
-//     ...
-//   },
-//   "2": {
-//     "11": {},
-//     "12": {},
-//     ...
-//   }
-// }
 
 let pageObj = {}
 
@@ -50,31 +38,10 @@ const listPageReducer = (state = initialState, action) =>
           "url": "-"
         }
 
-        // pageObj = {}
-        // let keyName = draft.pokemonCount + draft.newPokemonsCount + 1
-        // console.log("keyName", keyName);
-        // let pokemonObj = {}
-        // pokemonObj['name'] = action.data.name
-        // pokemonObj['url'] = '-'
-        // // console.log("action.list.results", action.list.results);
-        //
-        // pageObj[keyName] = pokemonObj;
-        // console.log("pageObj", pageObj);
-        // draft.fullPokemonListObj[keyName] = pokemonObj;
-        //
-        // console.log("draft.fullPokemonListObj", draft.fullPokemonListObj);
-        //
         return {
           ...state,
           newPokemons: [...state.newPokemons, action.data],
-          pokemonListTotal: [...state.pokemonListTotal, normalisedNewPokemonData],
-          // fullPokemonListObj: {
-          //   ...state.categories,
-          //   Professional: {
-          //     ...state.categories.Professional,
-          //     active: true
-          //   }
-          // }
+          pokemonListTotal: [...state.pokemonListTotal, normalisedNewPokemonData]
         }
 
         break;
@@ -89,49 +56,51 @@ const listPageReducer = (state = initialState, action) =>
 
         break;
 
+      case POPULATE_POKEMON:
+        let count = draft.newPokemons.length;
+        let obj = {
+            "id": "n-"+count,
+            "name": "pokemon" + count,
+            "abilities": count,
+            "height": count,
+            "weight": count,
+            "moves": count,
+            "order": "",
+            "species": "",
+            "sprites": "",
+            "stats": ""
+        }
+
+        return {
+          ...state,
+          newPokemons: [...state.newPokemons, obj]
+        }
+
+        break;
 
       case RETRIEVE_POKEMON_SUCCESS:
         draft.listLoading = false;
         draft.currentListPage = action.page;
-        draft.pokemonCount = action.list.count;
-        draft.pokemonList = action.list.results;
+        console.log('action.count', action.count)
 
-        console.log('RETRIEVE_POKEMON_SUCCESS')
+        let pCount;
+        if (action.count > 0) {
+          pCount = action.count
+          draft.pokemonCount = action.count
+        } else {
+          pCount = draft.pokemonCount
+        }
+        console.log('pCount', pCount)
 
-        // pageObj = {}
-        // for (var i=0; i<action.list.results.length; i++) {
-        //   let keyName = ((action.page - 1) * 20) + i + 1
-        //   console.log("keyName", keyName);
-        //   let pokemonObj = {}
-        //   pokemonObj['name'] = action.list.results[i]['name']
-        //   pokemonObj['url'] = action.list.results[i]['url']
-        //   // console.log("action.list.results", action.list.results);
-        //
-        //   pageObj[keyName] = pokemonObj;
-        //   draft.fullPokemonListObj[keyName] = pokemonObj;
-        // }
-        //
-        // console.log("action.list.results", action.list.results);
-        // console.log("pageObj", pageObj);
-        // console.log("draft.fullPokemonListObj", draft.fullPokemonListObj);
-        // draft.pokemonList = pageObj;
+        draft.pokemonList = action.list;
 
-        // return {
-        //   ...state,
-        //   fullPokemonListObj: [...state.fullPokemonListObj, ...pageObj]
-        // }
-        // return {
-        //   ...state,
-        //   fullPokemonListObj: pageObj
-        // }
+        let apiPokemonLastPageCount = Math.ceil(pCount / 20)
+        let apiPokemonLastPageRemainder = (pCount % 20)
 
-        // let pageObj = {
-        //   action.page: {
-        //     "1": {},
-        //     "2": {},
-        //     ...
-        //   },
-        // }
+        draft.apiPokemonLastPageCount = apiPokemonLastPageCount
+        draft.apiPokemonLastPageRemainder = apiPokemonLastPageRemainder
+        console.log("apiPokemonLastPageCount", apiPokemonLastPageCount)
+        console.log("apiPokemonLastPageRemainder", apiPokemonLastPageRemainder)
 
         break;
     }

@@ -48,16 +48,19 @@ function Form({
     formState: { errors },
   } = useForm();
 
+  let newPokemonId = "n-" + parseInt(listPage.newPokemons.length + 1)
+
   return (
     <div>
       <button>
         Randomise pokemon data
       </button>
-      
+
       <form onSubmit={handleSubmit((data) => {onAddPokemon(data); closeModal()})}>
         <div>
-          <label htmlFor="id">Id</label>
-          {listPage.pokemonCount + listPage.newPokemons.length + 1}
+          <label htmlFor="id">Id: </label>
+          <input type="hidden" value={newPokemonId} {...register('id', { required: true })} />
+          {newPokemonId}
         </div>
         <div>
           <label htmlFor="name">Name</label>

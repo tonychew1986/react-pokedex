@@ -67,14 +67,16 @@ import { useTable, usePagination } from 'react-table'
 import {
   retrievePokemon,
   addPokemon,
-  setPage
+  setPage,
+  populatePokemon
 } from './actions';
 
 export function ListPage({
   listPage,
   onRetrievePokemon,
   onAddPokemon,
-  onSetPage
+  onSetPage,
+  onPopulatePokemon
 }) {
   useInjectReducer({ key: 'listPage', reducer });
   useInjectSaga({ key: 'listPage', saga });
@@ -120,11 +122,13 @@ export function ListPage({
         Header: 'Pokemon',
         columns: [
           {
-            Header: 'id',
+            Header: 'pokemon id',
             accessor: "",
             Cell: (row) => {
+              let pokePath = row.row.original.url.split("/");
+              let pokeId = pokePath[pokePath.length - 2];
               return (
-                <div>{((listPage.currentListPage) * 20) + (parseInt(row.row.id) + 1)}</div>
+                <div>{pokeId}</div>
               )
             },
           },
@@ -173,9 +177,12 @@ export function ListPage({
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => {
+                  let pokePath = cell.row.original.url.split("/");
+                  let pokeId = pokePath[pokePath.length - 2];
+
                   return (
                     <td {...cell.getCellProps()}>
-                      <Link to={`/detail/${((1 * 20) + (i+1))}`}>
+                      <Link to={`/detail/${pokeId}`}>
                         {cell.render('Cell')}
                       </Link>
                     </td>
@@ -216,15 +223,29 @@ export function ListPage({
         <Form listPage={listPage} onAddPokemon={onAddPokemon} closeModal={closeModal} />
       </Modal>
 
-      <Link to="/detail/1154">
-        link to existing pokemon
-      </Link>
-      <Link to="/detail/1155">
-        link to new pokemon
-      </Link>
-      <Link to="/detail/1156">
-        no such pokemon
-      </Link>
+      <div>
+        Quick access testing functionality
+      </div>
+      <div>
+        <Link to="/detail/1154">
+          link to existing pokemon
+        </Link>
+      </div>
+      <div>
+        <Link to="/detail/1155">
+          link to new pokemon
+        </Link>
+      </div>
+      <div>
+        <Link to="/detail/1156">
+          no such pokemon
+        </Link>
+      </div>
+      <div>
+        <button onClick={() => onPopulatePokemon()}>
+          Add 1 new pokemons
+        </button>
+      </div>
 
       <Styles>
         <Table
@@ -285,6 +306,10 @@ function mapDispatchToProps(dispatch) {
     onSetPage: evt => {
       if (evt !== undefined && evt.preventDefault) evt.preventDefault();
       dispatch(setPage(evt));
+    },
+    onPopulatePokemon: evt => {
+      if (evt !== undefined && evt.preventDefault) evt.preventDefault();
+      dispatch(populatePokemon(evt));
     },
   };
 }

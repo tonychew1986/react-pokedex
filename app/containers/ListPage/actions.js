@@ -8,7 +8,8 @@ import {
   ADD_POKEMON,
   RETRIEVE_POKEMON,
   RETRIEVE_POKEMON_SUCCESS,
-  SET_PAGE
+  SET_PAGE,
+  POPULATE_POKEMON
 } from './constants';
 
 export function addPokemon(data) {
@@ -27,12 +28,13 @@ export function retrievePokemon(page) {
   };
 }
 
-export function retrievePokemonSuccess(page, list) {
-  console.log('RETRIEVE_POKEMON_SUCCESS')
+export function retrievePokemonSuccess(page, list, count) {
+  console.log('RETRIEVE_POKEMON_SUCCESS', count)
   return {
     type: RETRIEVE_POKEMON_SUCCESS,
     page,
-    list
+    list,
+    count
   };
 }
 
@@ -41,5 +43,12 @@ export function setPage(page) {
   return {
     type: SET_PAGE,
     page
+  };
+}
+
+export function populatePokemon() {
+  console.log('POPULATE_POKEMON')
+  return {
+    type: POPULATE_POKEMON
   };
 }

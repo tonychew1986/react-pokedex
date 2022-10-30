@@ -9,3 +9,5 @@ export const RETRIEVE_POKEMON_SUCCESS = 'app/ListPage/RETRIEVE_POKEMON_SUCCESS';
 
 export const ADD_POKEMON = 'app/ListPage/ADD_POKEMON';
 export const SET_PAGE = 'app/ListPage/SET_PAGE';
+
+export const POPULATE_POKEMON = 'app/ListPage/POPULATE_POKEMON';
