@@ -8,9 +8,6 @@ Pages
 - New pokemon form page
 
 
-Pokedex flow
-----------------
-
 ## Demo
 https://user-images.githubusercontent.com/6251226/198874428-5843a520-fd1f-490a-bf5b-fa78ccf9c0b3.mp4
 
