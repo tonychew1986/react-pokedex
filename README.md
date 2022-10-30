@@ -25,30 +25,14 @@ https://user-images.githubusercontent.com/6251226/198874428-5843a520-fd1f-490a-b
 7. The newly added pokemon should be reflected in the paginated list with the pre-existing pokemons
 8. Details of the newly added pokemon can also be viewed upon clicking
 
-### Existing pokemons implementation
-- Call PokeApi & insert into Redux store
-- Retrieve pokemon count to determine pagination
-- Display pokemon on to UI with pagination
-- Each page consist of 20 pokemon
-- so total page will be 1154/20
-- each pokemon has an id
-- when pokemon is clicked on, retrieve data from id
-- pokemon id not in sequential order
-
-### New pokemon
-- Append from total pokemon count (1154)
-- existing pokemon can be retrieved live from pokeApi
-- new pokemon needs to be stored in redux store
-- will require a local 'new pokemon addition' array
-- new pokemon will require prefix to id (due to non-sequential order of pokemon from pokeApi)
 
 ## Issues faced
 - pokemon id is not in sequential order
 - newly added pokemon cannot follow id in terms of sequential order
-- give it a unique identifier before the id
-- cannot use id to determine if a detail page is empty or does not contain pokemon
-- on the last page of the list new + existing pokemon, it will require application logic to display it properly
-- can't combine new + existing pokemon due to data structure considerations
+- need to give new pokemon a unique identifier
+- cannot use id to determine if a detail page is empty or does not contain pokemon (when entering from url directly)
+- on the last page of the list new + existing pokemon, it will require application logic to display it properly.
+- can't combine new + existing pokemon directly due to data structure considerations
 - thought of implementing one big object that incrementally appends when adding new pokemon or querying existing pokemon but decided against it. Scaling and code reasoning issues
 
 ## Decision for solving 'newly added pokemon' issues
